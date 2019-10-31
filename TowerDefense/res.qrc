@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>browntower.png</file>
+        <file>greentower.png</file>
+        <file>redtower.png</file>
+        <file>enemy.png</file>
+        <file>yellowtower.png</file>
+        <file>redtowerbullet.png</file>
+        <file>yelowtowerbullet.png</file>
+        <file>browntowerbullet.png</file>
+        <file>greentowerbullet.png</file>
+    </qresource>
+    <qresource prefix="/"/>
+</RCC>
