@@ -1,4 +1,5 @@
 #include "bullet.h"
+#include "enemy.h"
 #include <QPixmap>
 #include <QTimer>
 #include <qmath.h> // qSin, qCos, qTan
@@ -22,7 +23,9 @@ Bullet::Bullet(QGraphicsItem *parent): QObject(),QGraphicsPixmapItem(parent){
 }
 
 void Bullet::move(){
-    int STEP_SIZE = 30;
+
+
+    int STEP_SIZE = 10;
     double theta = rotation(); // degrees
 
     double dy = STEP_SIZE * qSin(qDegreesToRadians(theta));
@@ -30,6 +33,16 @@ void Bullet::move(){
 
     setPos(x()+dx, y()+dy);
 
+}
+
+double Bullet::getPosx()
+{
+    return this->x();
+}
+
+double Bullet::getPosy()
+{
+    return this->y();
 }
 
 double Bullet::getMaxRange(){

@@ -1,6 +1,5 @@
 #include "greentower.h"
 #include <QTimer>
-#include "bullet.h"
 #include "game.h"
 
 extern Game * game;
@@ -45,9 +44,9 @@ GreenTower::GreenTower(QGraphicsItem *parent){
 
 void GreenTower::fire(){
     // create the bullets
-    Bullet * bullet1 = new Bullet();
-    Bullet * bullet2 = new Bullet();
-    Bullet * bullet3 = new Bullet();
+    bullet1 = new Bullet();
+    bullet2 = new Bullet();
+    bullet3 = new Bullet();
 
     // set the graphics
     bullet1->setPixmap(QPixmap(":/images/greentowerbullet.png"));
@@ -62,15 +61,54 @@ void GreenTower::fire(){
     int angle = -1 * ln.angle();
 
     bullet1->setRotation(angle);
-    bullet2->setRotation(angle+10);
-    bullet3->setRotation(angle-10);
+    bullet2->setRotation(angle+5);
+    bullet3->setRotation(angle-5);
 
     game->scene->addItem(bullet1);
     game->scene->addItem(bullet2);
     game->scene->addItem(bullet3);
+
+    QTimer * timer = new QTimer(this);
+    connect(timer,SIGNAL(timeout()),this,SLOT(check_colision()));
+    timer->start(200);
+
 }
 
 void GreenTower::aquire_target(){
     Tower::aquire_target();
+}
+
+void GreenTower::check_colision()
+{
+
+    for (int i = 0;i<game->enemigos->size();++i) {
+        int posx_enemy = game->enemigos->at(i)->x();
+        int posy_enemy = game->enemigos->at(i)->y();
+
+        int posx_bullet1 = bullet1->x();
+        int posy_bullet1 = bullet1->y();
+
+        int posx_bullet2 = bullet2->x();
+        int posy_bullet2 = bullet2->y();
+
+        int posx_bullet3 = bullet3->x();
+        int posy_bullet3 = bullet3->y();
+
+        if((posx_enemy+20 > posx_bullet1  && posx_bullet1 > posx_enemy-20) || (posx_enemy+20 > posx_bullet2  && posx_bullet2 > posx_enemy-20) ||
+                (posx_enemy+20 > posx_bullet3  && posx_bullet3 > posx_enemy-20)){
+
+            if((posy_enemy+20 > posy_bullet1 && posy_bullet1 > posy_enemy-20) || (posy_enemy+20 > posy_bullet2  && posy_bullet2 > posy_enemy-20) ||
+                    (posy_enemy+20 > posy_bullet3  && posy_bullet3 > posy_enemy-20)){
+
+                qDebug() << "Crash" << endl;
+                game->enemigos->at(i)->hide();
+
+            }
+
+        }
+
+
+    }
+
 }
 

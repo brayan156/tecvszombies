@@ -6,6 +6,7 @@
 #include <QGraphicsItem>
 #include <QPointF>
 #include <QObject>
+#include "enemy.h"
 
 class Tower:public QObject, public QGraphicsPixmapItem{
     Q_OBJECT
@@ -14,6 +15,7 @@ public:
     double distanceTo(QGraphicsItem * item);
     virtual void fire();
     QGraphicsPolygonItem * attack_area;
+    Enemy * enemy;
     void setSCALE_FACTOR(int value);
     float damage;
     int cost;

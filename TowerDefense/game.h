@@ -35,6 +35,9 @@ public:
     QList <Enemy*> *enemigos=new QList<Enemy*>;
     QList <Zombie> *zombies=new QList<Zombie>;
     int contador_union_zombie_enemigo=0;
+
+    QList<Enemy *> *getEnemigos() const;
+
 public slots:
     void spawnEnemy();
 };

@@ -14,7 +14,8 @@ public:
     Enemy(QList<QPointF> pointsToFollow, QGraphicsItem * parent=0);
     void rotateToPoint(QPointF p);
     Zombie zombie;
-    int posx; int posy;
+
+
 public slots:
     void moveForward();
 private:

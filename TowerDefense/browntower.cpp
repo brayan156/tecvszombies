@@ -1,6 +1,5 @@
 #include "browntower.h"
 #include <QTimer>
-#include "bullet.h"
 #include "game.h"
 
 extern Game * game;
@@ -38,11 +37,12 @@ BrownTower::BrownTower(QGraphicsItem *parent){
     connect(timer,SIGNAL(timeout()),this,SLOT(aquire_target()));
     timer->start(1500);
 
+
 }
 
 void BrownTower::fire(){
 
-    Bullet * bullet = new Bullet();
+    bullet = new Bullet();
     bullet->setPixmap(QPixmap(":/images/browntowerbullet.png"));
     bullet->setPos(x()+25,y()+25);
 
@@ -52,8 +52,36 @@ void BrownTower::fire(){
     bullet->setRotation(angle);
     game->scene->addItem(bullet);
 
+    QTimer * timer = new QTimer(this);
+    connect(timer,SIGNAL(timeout()),this,SLOT(check_colision()));
+    timer->start(200);
+
+
 }
 
 void BrownTower::aquire_target(){
     Tower::aquire_target();
+}
+
+void BrownTower::check_colision()
+{
+    for (int i = 0;i<game->enemigos->size();++i) {
+        int posx_enemy = game->enemigos->at(i)->x();
+        int posx_bullet = bullet->x();
+        int posy_enemy = game->enemigos->at(i)->y();
+        int posy_bullet = bullet->y();
+
+        if(posx_enemy+20 > posx_bullet  && posx_bullet > posx_enemy-20){
+
+            if(posy_enemy+20 > posy_bullet && posy_bullet > posy_enemy-20){
+
+                qDebug() << "Crash" << endl;
+                game->enemigos->at(i)->hide();
+
+            }
+
+        }
+
+
+    }
 }

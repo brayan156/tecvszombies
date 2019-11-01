@@ -9,7 +9,7 @@
 #include "game.h"
 #include <QTimer>
 #include <QGraphicsRectItem>
-#include "enemy.h"
+
 
 extern Game * game;
 
@@ -28,6 +28,7 @@ double Tower::distanceTo(QGraphicsItem *item){
 }
 
 void Tower::fire(){
+
     Bullet * bullet = new Bullet();
     bullet->setPos(x()+25,y()+25);
 
@@ -56,10 +57,11 @@ void Tower::aquire_target(){
     for (size_t i = 0, n = colliding_items.size(); i < n; ++i){
 
         // make sure it is an enemy
-        Enemy * enemy = dynamic_cast<Enemy *>(colliding_items[i]);
+        enemy = dynamic_cast<Enemy *>(colliding_items[i]);
 
         // see if distance is closer
         if (enemy){
+
             double this_dist = distanceTo(colliding_items[i]);
             if (this_dist < closest_dist){
                 closest_dist = this_dist;

@@ -113,7 +113,7 @@ void Game::createEnemies(int numberOfEnemies){
     enemiesSpawned = 0;
     maxNumberOfEnemies = numberOfEnemies;
     connect(spawnTimer,SIGNAL(timeout()),this,SLOT(spawnEnemy()));
-    spawnTimer->start(1000);
+    spawnTimer->start(3000);
 
 }
 
@@ -179,9 +179,16 @@ void Game::agregar_torre_matriz(int px, int py)
     }
 }
 
+QList<Enemy *> *Game::getEnemigos() const
+{
+    return enemigos;
+}
+
 void Game::spawnEnemy(){
     // spawn an enemy
+
     Enemy * enemy = new Enemy(pointsToFollow);
+
     enemy->zombie=this->zombies->at(this->contador_union_zombie_enemigo);
     this->contador_union_zombie_enemigo++;
     enemy->setPos(pointsToFollow[0]);
@@ -190,6 +197,7 @@ void Game::spawnEnemy(){
     enemiesSpawned += 1;
 
     if (enemiesSpawned >= maxNumberOfEnemies){
+
         spawnTimer->disconnect();
     }
 }
