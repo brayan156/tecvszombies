@@ -25,6 +25,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        astar.cpp \
         backtracking.cpp \
         browntower.cpp \
         buildbrowntowericon.cpp \
@@ -41,6 +42,7 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
         menuview.cpp \
+        par.cpp \
         redtower.cpp \
         tower.cpp \
         yellowtower.cpp \
@@ -62,6 +64,7 @@ HEADERS += \
         greentower.h \
         mainwindow.h \
         menuview.h \
+        par.h \
         redtower.h \
         tower.h \
         yellowtower.h \

@@ -7,6 +7,7 @@
 #include "backtracking.h"
 #include "enemy.h"
 #include "genetico.h"
+#include "par.h"
 #include "tower.h"
 #include<QtGui>
 
@@ -33,6 +34,7 @@ public:
     QList<int> *crearuta(int px,int py);
 
     // member attributes
+    QList<Par> *lista_temporal_Astar=new QList<Par>;
     int tiempo_spawn=3000;
     int MatrizBack[10][10];
     QGraphicsScene * scene;
@@ -56,6 +58,7 @@ public:
     int cantidad_oleadas;
     QString modo="";
     BackTracking track;
+    int A_temporizador=0;
 
     QList<Enemy *> *getEnemigos() const;
 

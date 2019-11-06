@@ -15,6 +15,7 @@
 #include <QPen>
 #include <QGraphicsLineItem>
 #include <QDebug>
+#include "astar.cpp"
 
 Game::Game(): QGraphicsView(){
     // create a scene
@@ -402,11 +403,32 @@ void Game::spawnEnemy(){
         enemy->setPixmap(QPixmap(":/images/zombie4.png"));
     }
 
+    if (this->A_temporizador=0){
+        enemy->zombie.modo_movimiento=enemy->zombie.A;
+        A_temporizador=3;
+    }
+    A_temporizador--;
+
+
 
     this->contador_union_zombie_enemigo++;
     enemy->setPos(0,9*60);
+    if (enemy->zombie.modo_movimiento==enemy->zombie.backtracking){
     this->track.solveMaze(this->MatrizBack,0,9);
     enemy->ruta=this->crearuta(0,9);
+    }else{
+        Pair src = make_pair(0, 9);
+        Pair dest = make_pair(9, 0);
+        this->lista_temporal_Astar->clear();
+        aStarSearch(this->MatrizBack, src, dest);
+        for (int i=0; i<lista_temporal_Astar->length();i++ ){
+            enemy->lista_Astar->append(this->lista_temporal_Astar->at(i));
+            qDebug()<<this->lista_temporal_Astar->at(i).x<<" , "<<lista_temporal_Astar->at(i).y;
+
+        }
+        enemy->siguiente_punto.x=enemy->lista_Astar->at(1).x;
+        enemy->siguiente_punto.x=enemy->lista_Astar->at(1).y;
+    }
     scene->addItem(enemy);
     this->enemigos->append(enemy);
     enemy->poner_a_caminar();

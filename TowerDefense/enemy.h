@@ -1,6 +1,7 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
+#include "par.h"
 #include "zombie.h"
 
 #include <QGraphicsPixmapItem>
@@ -19,6 +20,8 @@ public:
     int pasos=0;
     int mov_actual=0;
     int cambio_ruta=0;
+    QList<Par> *lista_Astar=new QList<Par>;
+    Par siguiente_punto;
     void poner_a_caminar();
 
 

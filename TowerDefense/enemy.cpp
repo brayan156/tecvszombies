@@ -67,6 +67,19 @@ void Enemy::moveForward(){
     double dx = STEP_SIZE * qCos(qDegreesToRadians(theta));*/
     //y=90 y x=90
 //    qDebug()<<"intento caminar";
+    if (this->zombie.modo_movimiento==this->zombie.A){
+        if (this->x()!=this->siguiente_punto.x*80 && this->y()!=this->siguiente_punto.y*60){
+        setPos(x()+(this->siguiente_punto.x-this->coordenada[0])*4, y()+(this->siguiente_punto.y-this->coordenada[1])*3);
+        }
+        else{
+            if (this->lista_Astar->length()!=0){
+                this->lista_Astar->removeFirst();
+            }
+            this->siguiente_punto=this->lista_Astar->at(0);
+        }
+    }
+
+    else{
     if (mov_actual==0){if (ruta->length()!=0){
             mov_actual=this->ruta->first();}
         if (mov_actual==1){this->coordenada[0]--;}
@@ -129,6 +142,7 @@ void Enemy::moveForward(){
         if (mov_actual==2){setPos(x(), y()-2);}
         else {setPos(x(), y()+2);}
         this->pasos+=2;
+    }
     }
 
 
