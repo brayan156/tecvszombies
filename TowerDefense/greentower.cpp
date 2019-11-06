@@ -107,17 +107,7 @@ void GreenTower::check_colision()
                     bullet2->golpea_a_enemigo=1;
                 }
 
-                if(game->enemigos->at(i)->zombie.stats[2] <= 0){
-                    game->enemigos->at(i)->hide();
-                    game->enemigos->at(i)->zombie.stats[2]=game->enemigos->at(i)->zombie.vida_incial;
-                    game->enemigos_eliminados->append(game->enemigos->at(i)->zombie);
-                    game->enemigos->removeAt(i);
-                    if (game->enemigos->length()==0 && game->enemiesSpawned==game->maxNumberOfEnemies){
-                        game->contador_union_zombie_enemigo=0;
-                        game->pasar_generacion();
-                    }
 
-                }
 
             } else if ((posy_enemy+20 > posy_bullet2  && posy_bullet2 > posy_enemy-20)){
 
@@ -129,17 +119,6 @@ void GreenTower::check_colision()
                     bullet2->golpea_a_enemigo=1;
                 }
 
-                if(game->enemigos->at(i)->zombie.stats[2] <= 0){
-                    game->enemigos->at(i)->hide();
-                    game->enemigos->at(i)->zombie.stats[2]=game->enemigos->at(i)->zombie.vida_incial;
-                    game->enemigos_eliminados->append(game->enemigos->at(i)->zombie);
-                    game->enemigos->removeAt(i);
-                    if (game->enemigos->length()==0 && game->enemiesSpawned==game->maxNumberOfEnemies){
-                        game->contador_union_zombie_enemigo=0;
-                        game->pasar_generacion();
-                    }
-
-                }
 
             } else if ((posy_enemy+20 > posy_bullet3  && posy_bullet3 > posy_enemy-20)){
 
@@ -151,16 +130,17 @@ void GreenTower::check_colision()
                     bullet3->golpea_a_enemigo=1;
                 }
 
-                if(game->enemigos->at(i)->zombie.stats[2] <= 0){
-                    game->enemigos->at(i)->hide();
-                    game->enemigos->at(i)->zombie.stats[2]=game->enemigos->at(i)->zombie.vida_incial;
-                    game->enemigos_eliminados->append(game->enemigos->at(i)->zombie);
-                    game->enemigos->removeAt(i);
-                    if (game->enemigos->length()==0 && game->enemiesSpawned==game->maxNumberOfEnemies){
-                        game->contador_union_zombie_enemigo=0;
-                        game->pasar_generacion();
-                    }
 
+
+            }
+            if(game->enemigos->at(i)->zombie.stats[2] <= 0){
+                game->enemigos->at(i)->hide();
+                game->enemigos->at(i)->zombie.stats[2]=game->enemigos->at(i)->zombie.vida_incial;
+                game->enemigos_eliminados->append(game->enemigos->at(i)->zombie);
+                game->enemigos->removeAt(i);
+                if (game->enemigos->length()==0 && game->enemiesSpawned==game->maxNumberOfEnemies){
+                    game->contador_union_zombie_enemigo=0;
+                    game->pasar_generacion();
                 }
 
             }

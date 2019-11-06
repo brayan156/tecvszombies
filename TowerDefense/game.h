@@ -33,7 +33,9 @@ public:
     void pasar_generacion();
     QList<int> *crearuta(int px,int py);
 
+
     // member attributes
+    QString link="http://192.168.100.24:9080/web_war_exploded/zombies/zomb";
     QList<Par> *lista_temporal_Astar=new QList<Par>;
     int tiempo_spawn=3000;
     int MatrizBack[10][10];
@@ -47,6 +49,7 @@ public:
     int numero_enemigos;
     int distanciax;
     int distanciay;
+    int llamado=0;
     QList<QPointF> pointsToFollow;
     QList <Enemy*> *enemigos=new QList<Enemy*>;
     QList <Zombie> *zombies=new QList<Zombie>;

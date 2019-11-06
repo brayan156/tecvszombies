@@ -12,6 +12,7 @@
 class Enemy: public QObject, public QGraphicsPixmapItem{
     Q_OBJECT
 public:
+     QTimer * timer;
     Enemy(QList<QPointF> pointsToFollow, QGraphicsItem * parent=0);
     void rotateToPoint(QPointF p);
     Zombie zombie;

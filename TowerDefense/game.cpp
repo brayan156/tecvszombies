@@ -15,6 +15,9 @@
 #include <QPen>
 #include <QGraphicsLineItem>
 #include <QDebug>
+#include <QtNetwork/QNetworkAccessManager>
+#include <QtNetwork/QNetworkRequest>
+#include <QtNetwork/QNetworkReply>
 #include "astar.cpp"
 
 Game::Game(): QGraphicsView(){
@@ -140,7 +143,7 @@ void Game::updateMatrizBack(int puntox, int puntoy)
     int index_y = (puntoy)/60;
 
     MatrizBack[index_y][index_x] = 0;
-    qDebug()<<QString::number(index_x)+" , "+QString::number(index_y);
+//    qDebug()<<QString::number(index_x)+" , "+QString::number(index_y);
     for (int n=0; n<this->enemigos->length();n++){
         Enemy *enemy=this->enemigos->at(n);
         this->track.solveMaze(this->MatrizBack,enemy->coordenada[0],enemy->coordenada[1]);
@@ -163,6 +166,34 @@ void Game::updateMatrizBack(int puntox, int puntoy)
 
 void Game::pasar_generacion()
 {
+    if (this->llamado==1){}
+    else{
+
+    this->llamado=1;
+    QUrl url(link);
+    QNetworkAccessManager *networkMgr = new QNetworkAccessManager(this);
+    this->zombies->clear();
+    connect(networkMgr, &QNetworkAccessManager::finished, this,[&] (QNetworkReply *reply)
+    {
+           QByteArray data=reply->readAll();
+           reply->deleteLater();
+           QString str =QString::fromLatin1(data);
+           qDebug()<<data;
+
+           QJsonDocument jsonResponse = QJsonDocument::fromJson(str.toUtf8());
+           QJsonArray json_array = jsonResponse.array();
+           this->cruzador.cant_mutaciones+=json_array.at(0)["mutaciones"].toInt();
+           this->cruzador.cant_inversiones+=json_array.at(0)["inversiones"].toInt();
+           for (int j=0; j<json_array.size();j++){
+              QJsonArray stats_array=json_array.at(j)["stats"].toArray();
+              Zombie zombie;
+              for (int n=0; n<7;n++){
+                zombie.stats[n]=stats_array.at(n).toInt(); }
+              zombie.vida_incial=zombie.stats[zombie.vida];
+              this->zombies->append(zombie);
+           }
+
+            });
     qDebug()<<"Voy a pasa de generacion";
     if (this->modo.compare("primer_ganador")==0){
         if (this->enemigos_pasados->length()>=1){
@@ -174,17 +205,37 @@ void Game::pasar_generacion()
             zombies_a_cruzar->append(this->enemigos_eliminados->at(i));
             if (zombies_a_cruzar->length()==8){break;} }
     qDebug()<<"cruzo enemigos";
-    this->zombies=this->cruzador.Combinar(zombies_a_cruzar);
-    numero_enemigos = this->zombies->length()-1;
+    QNetworkRequest request2(url);
+    request2.setRawHeader("Content-Type","application/json");
+    QJsonArray array;
+    for(int j=0;j<zombies_a_cruzar->length();j++){
+        QJsonObject object;
+        QJsonArray array1;
+        Zombie zombie1=zombies_a_cruzar->at(j);
+        for(int i=0;i<7;i++){
+            array1.append(zombie1.stats[i]);
+        }
+        object["stats"]=array1;
+        array.append(object);
+    }
+    QJsonDocument documento_a_enviar(array);
+    networkMgr->post(request2,documento_a_enviar.toJson());
+
+
+
     spawnTimer = new QTimer(this);
     enemiesSpawned = 0;
     maxNumberOfEnemies = 0;
      qDebug()<<"voy a crear nuevos enemigos";
+     QTime dieTime= QTime::currentTime().addMSecs(1000);
+     while (QTime::currentTime() < dieTime)
+     QCoreApplication::processEvents(QEventLoop::AllEvents, 1000);
+      numero_enemigos = this->zombies->length()-1;
     createEnemies(numero_enemigos);
      }
     }
     else if (this->modo.compare("generacion")==0){
-        if (this->cruzador.num_generacion<this->cantidad_oleadas){
+        if (this->cruzador.num_generacion>=this->cantidad_oleadas){
             qDebug()<<"Cerrar2";
             this->close();
         }else{
@@ -199,16 +250,38 @@ void Game::pasar_generacion()
                     zombies_a_cruzar->append(this->enemigos_eliminados->at(i));
                     if (zombies_a_cruzar->length()==8){break;} }
             }
-            this->zombies=this->cruzador.Combinar(zombies_a_cruzar);
-            numero_enemigos = this->zombies->length()-1;
+            QNetworkRequest request2(url);
+            request2.setRawHeader("Content-Type","application/json");
+            QJsonArray array;
+            for(int j=0;j<zombies_a_cruzar->length();j++){
+                QJsonObject object;
+                QJsonArray array1;
+                Zombie zombie1=zombies_a_cruzar->at(j);
+                for(int i=0;i<7;i++){
+                    array1.append(zombie1.stats[i]);
+                }
+                object["stats"]=array1;
+                array.append(object);
+            }
+            QJsonDocument documento_a_enviar(array);
+            networkMgr->post(request2,documento_a_enviar.toJson());
+
+
             spawnTimer = new QTimer(this);
             enemiesSpawned = 0;
             maxNumberOfEnemies = 0;
+            QTime dieTime= QTime::currentTime().addMSecs(1000);
+            while (QTime::currentTime() < dieTime)
+            QCoreApplication::processEvents(QEventLoop::AllEvents, 1000);
+            numero_enemigos = this->zombies->length()-1;
             createEnemies(numero_enemigos);
         }
     }
+    this->cruzador.num_generacion+=1;
     this->enemigos_eliminados->clear();
     this->enemigos_pasados->clear();
+    this->llamado=0;
+    }
 }
 
 QList<int> *Game::crearuta(int px, int py)
@@ -217,7 +290,7 @@ QList<int> *Game::crearuta(int px, int py)
   int xant=px;
   int yant=py;
   QList<int> *ruta=new QList<int>;
-  qDebug() << ("vamos a crear ruta");
+//  qDebug() << ("vamos a crear ruta");
 //  for (int i = 0; i < 10; i++)
 //  {
 //      for (int j = 0; j < 10; j++){
@@ -245,10 +318,10 @@ QList<int> *Game::crearuta(int px, int py)
           ruta->append(3);}
 
   }
-  for(int i=0; i<ruta->length();i++){
-      qDebug()<<ruta->at(i)<<",";
-  }
-  qDebug()<<"aqui termina ruta";
+//  for(int i=0; i<ruta->length();i++){
+//      qDebug()<<ruta->at(i)<<",";
+//  }
+//  qDebug()<<"aqui termina ruta";
   return ruta;
 }
 
@@ -281,12 +354,36 @@ void Game::creatRoad(){
 void Game::crear_poblacion()
 {
     int i=0;
+    QNetworkAccessManager *mManager = new QNetworkAccessManager(this);
     while (i<=this->numero_enemigos){
-        Zombie zombie;
-        zombie.crear_zombie_ramdon();
-        this->zombies->append(zombie);
+
+
         i++;
     }
+    connect(mManager, &QNetworkAccessManager::finished, this,[&] (QNetworkReply *reply)
+    {
+           QByteArray data=reply->readAll();
+           reply->deleteLater();
+           QString str =QString::fromLatin1(data);
+
+           QJsonDocument jsonResponse = QJsonDocument::fromJson(str.toUtf8());
+           QJsonArray json_array = jsonResponse.array();
+           this->cruzador.prob_mutacion=json_array.at(0)["prob_mutaciones"].toInt();
+           this->cruzador.prob_inversion=json_array.at(0)["prob_inversiones"].toInt();
+           for (int j=0; j<json_array.size();j++){
+              QJsonArray stats_array=json_array.at(j)["stats"].toArray();
+              Zombie zombie;
+              for (int n=0; n<7;n++){
+                zombie.stats[n]=stats_array.at(n).toInt(); }
+              zombie.vida_incial=zombie.stats[zombie.vida];
+              this->zombies->append(zombie);
+           }
+
+
+            });
+     QUrl url(this->link);
+     QNetworkRequest request(url);
+     mManager->get(request);
 
 }
 
@@ -330,6 +427,7 @@ void Game::empezar_primer_ganador()
 
 void Game::empezar_generacion(int n)
 {
+    this->cantidad_oleadas=n;
     this->modo="generacion";
     numero_enemigos = 10;
     spawnTimer = new QTimer(this);
@@ -403,7 +501,7 @@ void Game::spawnEnemy(){
         enemy->setPixmap(QPixmap(":/images/zombie4.png"));
     }
 
-    if (this->A_temporizador=0){
+    if (this->A_temporizador==0){
         enemy->zombie.modo_movimiento=enemy->zombie.A;
         A_temporizador=3;
     }
@@ -417,8 +515,8 @@ void Game::spawnEnemy(){
     this->track.solveMaze(this->MatrizBack,0,9);
     enemy->ruta=this->crearuta(0,9);
     }else{
-        Pair src = make_pair(0, 9);
-        Pair dest = make_pair(9, 0);
+        Pair src = make_pair(9, 0);
+        Pair dest = make_pair(0, 9);
         this->lista_temporal_Astar->clear();
         aStarSearch(this->MatrizBack, src, dest);
         for (int i=0; i<lista_temporal_Astar->length();i++ ){
@@ -427,7 +525,8 @@ void Game::spawnEnemy(){
 
         }
         enemy->siguiente_punto.x=enemy->lista_Astar->at(1).x;
-        enemy->siguiente_punto.x=enemy->lista_Astar->at(1).y;
+        enemy->siguiente_punto.y=enemy->lista_Astar->at(1).y;
+        enemy->lista_Astar->removeFirst();
     }
     scene->addItem(enemy);
     this->enemigos->append(enemy);

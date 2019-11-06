@@ -93,7 +93,7 @@ void tracePath(cell cellDetails[][COL], Pair dest)
         par.y=p.first;
         par.x=p.second;
         game->lista_temporal_Astar->append(par);
-        printf("-> (%d,%d) ",p.first,p.second);
+        printf("-> (%d,%d) ",par.x,par.y);
 
     }
 

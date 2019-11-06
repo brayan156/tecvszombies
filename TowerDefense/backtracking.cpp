@@ -66,7 +66,7 @@ bool BackTracking::solveMazeUtil(int maze[10][10], int x, int y, int sol[10][10]
         sol[y][x] = 1;
         return true;
     }
-    qDebug()<<QString::number(x)+" , "+QString::number(y);
+//    qDebug()<<QString::number(x)+" , "+QString::number(y);
 
     // Check if maze[x][y] is valid
     if(isSafe(maze, x, y) == true)
@@ -117,6 +117,6 @@ bool BackTracking::solveMazeUtil(int maze[10][10], int x, int y, int sol[10][10]
         //hasta aca si no funcionara
         return false;
     }
-    qDebug()<<"no estoy a salvo";
+//    qDebug()<<"no estoy a salvo";
     return false;
 }

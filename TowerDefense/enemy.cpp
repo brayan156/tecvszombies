@@ -27,7 +27,7 @@ void Enemy::rotateToPoint(QPointF p){
 
 void Enemy::poner_a_caminar()
 {
-    QTimer * timer = new QTimer(this);
+    timer = new QTimer(this);
     connect(timer,SIGNAL(timeout()),this,SLOT(moveForward()));
     int tope=50;
     int velocidad_inicial=300;
@@ -68,14 +68,20 @@ void Enemy::moveForward(){
     //y=90 y x=90
 //    qDebug()<<"intento caminar";
     if (this->zombie.modo_movimiento==this->zombie.A){
-        if (this->x()!=this->siguiente_punto.x*80 && this->y()!=this->siguiente_punto.y*60){
+        if (this->x()!=this->siguiente_punto.x*80 || this->y()!=this->siguiente_punto.y*60){
         setPos(x()+(this->siguiente_punto.x-this->coordenada[0])*4, y()+(this->siguiente_punto.y-this->coordenada[1])*3);
         }
-        else{
+        else{         
             if (this->lista_Astar->length()!=0){
+                this->coordenada[0]=this->lista_Astar->first().x;
+                this->coordenada[1]=this->lista_Astar->first().y;
                 this->lista_Astar->removeFirst();
+
             }
-            this->siguiente_punto=this->lista_Astar->at(0);
+            if (this->lista_Astar->length()!=0){
+                this->siguiente_punto=this->lista_Astar->at(0);
+            }
+
         }
     }
 
@@ -156,7 +162,9 @@ void Enemy::moveForward(){
         if (game->enemigos->length()==0 && game->enemiesSpawned==game->maxNumberOfEnemies){
             game->contador_union_zombie_enemigo=0;
             game->pasar_generacion();
+
         }
+        this->disconnect();
     }
 
 }
