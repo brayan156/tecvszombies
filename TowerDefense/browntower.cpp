@@ -38,6 +38,9 @@ BrownTower::BrownTower(QGraphicsItem *parent){
     timer->start(1500);
 
 
+    this->damage = 10;
+
+
 }
 
 void BrownTower::fire(){
@@ -46,7 +49,7 @@ void BrownTower::fire(){
     bullet->setPixmap(QPixmap(":/images/browntowerbullet.png"));
     bullet->setPos(x()+25,y()+25);
 
-    QLineF ln(QPointF(x()+25,y()+25),attack_dest);
+    QLineF ln(QPointF(x(),y()),attack_dest);
     int angle = -1 * ln.angle();
 
     bullet->setRotation(angle);
@@ -54,7 +57,7 @@ void BrownTower::fire(){
 
     QTimer * timer = new QTimer(this);
     connect(timer,SIGNAL(timeout()),this,SLOT(check_colision()));
-    timer->start(200);
+    timer->start(100);
 
 
 }
@@ -65,18 +68,36 @@ void BrownTower::aquire_target(){
 
 void BrownTower::check_colision()
 {
+
     for (int i = 0;i<game->enemigos->size();++i) {
         int posx_enemy = game->enemigos->at(i)->x();
         int posx_bullet = bullet->x();
         int posy_enemy = game->enemigos->at(i)->y();
         int posy_bullet = bullet->y();
 
-        if(posx_enemy+20 > posx_bullet  && posx_bullet > posx_enemy-20){
+        if(posx_enemy+25 > posx_bullet  && posx_bullet > posx_enemy-25){
 
             if(posy_enemy+20 > posy_bullet && posy_bullet > posy_enemy-20){
+                int ataque=(this->damage)-game->enemigos->at(i)->zombie.stats[5];
+                if (ataque<1){ataque=1;}
+                if (bullet->golpea_a_enemigo==0){
+                    game->enemigos->at(i)->zombie.stats[2] -= ataque;
+                    bullet->golpea_a_enemigo=1;
+                }
+                qDebug() << game->enemigos->at(i)->zombie.stats[2] << endl;
 
-                qDebug() << "Crash" << endl;
-                game->enemigos->at(i)->hide();
+                if(game->enemigos->at(i)->zombie.stats[2] <= 0){
+                    game->enemigos->at(i)->hide();
+                    game->enemigos->at(i)->zombie.stats[2]=game->enemigos->at(i)->zombie.vida_incial;
+                    game->enemigos_eliminados->append(game->enemigos->at(i)->zombie);
+                    game->enemigos->removeAt(i);
+                    if (game->enemigos->length()==0 && game->enemiesSpawned==game->maxNumberOfEnemies){
+                        game->contador_union_zombie_enemigo=0;
+                        game->pasar_generacion();
+                    }
+
+                }
+
 
             }
 

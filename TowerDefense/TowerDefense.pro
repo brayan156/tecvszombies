@@ -25,35 +25,43 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        backtracking.cpp \
         browntower.cpp \
         buildbrowntowericon.cpp \
         buildgreentowericon.cpp \
         buildredtowericon.cpp \
         buildyellowtowericon.cpp \
         bullet.cpp \
+        custombutton.cpp \
         enemy.cpp \
+        estadisticasview.cpp \
         game.cpp \
         genetico.cpp \
         greentower.cpp \
         main.cpp \
         mainwindow.cpp \
+        menuview.cpp \
         redtower.cpp \
         tower.cpp \
         yellowtower.cpp \
         zombie.cpp
 
 HEADERS += \
+        backtracking.h \
         browntower.h \
         buildbrowntowericon.h \
         buildgreentowericon.h \
         buildredtowericon.h \
         buildyellowtowericon.h \
         bullet.h \
+        custombutton.h \
         enemy.h \
+        estadisticasview.h \
         game.h \
         genetico.h \
         greentower.h \
         mainwindow.h \
+        menuview.h \
         redtower.h \
         tower.h \
         yellowtower.h \

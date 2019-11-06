@@ -9,6 +9,10 @@
         <file>yelowtowerbullet.png</file>
         <file>browntowerbullet.png</file>
         <file>greentowerbullet.png</file>
+        <file>zombie1.png</file>
+        <file>zombie2.png</file>
+        <file>zombie3.png</file>
+        <file>zombie4.png</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

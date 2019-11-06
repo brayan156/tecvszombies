@@ -11,7 +11,7 @@ QList<Zombie> *Genetico::Combinar(QList<Zombie> *zombies_a_cruzar)
     for (int i=0; i < zombies_a_cruzar->length();i++){
 
         Zombie zombie1=zombies_a_cruzar->at(i);
-        for (int j=i+1; j<zombies_a_cruzar->length();i++){
+        for (int j=i+1; j<zombies_a_cruzar->length();j++){
             Zombie nuevozombie;
             Zombie zombie2=zombies_a_cruzar->at(j);
             int tipo=rand()%2;
@@ -40,18 +40,22 @@ QList<Zombie> *Genetico::Combinar(QList<Zombie> *zombies_a_cruzar)
                 nuevozombie.stats[6]=zombie1.stats[6];
             }
             int n_inverision=rand()%10;
-            if (n_inverision>=this->prob_inversion){
+            if (n_inverision>this->prob_inversion){
                 nuevozombie=this->Inversion(nuevozombie);
+                this->cant_inversiones++;
             }
             for (int m=2;m<7;m++){
                 int n_mutancion=rand()%10;
-                if (n_mutancion>=this->prob_mutacion){
+                if (n_mutancion>this->prob_mutacion){
                     nuevozombie.stats[m]+=2;
+                    this->cant_mutaciones++;
                 }
             }
+            nuevozombie.vida_incial=nuevozombie.stats[nuevozombie.vida];
             nuevagen->append(nuevozombie);
         }
     }
+    this->num_generacion++;
     return nuevagen;
 }
 
@@ -59,6 +63,7 @@ Zombie Genetico::Inversion(Zombie zombie_a_invertir)
 {
     Zombie zombie_invertido;
     int j=6;
+    zombie_invertido.stats[zombie_invertido.velocidad]=zombie_a_invertir.stats[zombie_a_invertir.velocidad];
     for (int i=2;i<j;i++){
         zombie_invertido.stats[i]=zombie_a_invertir.stats[j];
         zombie_invertido.stats[j]=zombie_a_invertir.stats[i];

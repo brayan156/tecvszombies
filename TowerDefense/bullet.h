@@ -11,6 +11,7 @@ public:
     Bullet(QGraphicsItem * parent=0);
     double getPosx();
     double getPosy();
+    int golpea_a_enemigo=0;
 
 public slots:
     void move();  
@@ -18,9 +19,12 @@ public slots:
     double getDistanceTravelled();
     void setMaxRange(double rng);
     void setDistanceTravelled(double dist);
+
 private:
     double maxRange;
     double distanceTravelled;
+
+
 };
 
 #endif // BULLET_H

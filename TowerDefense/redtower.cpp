@@ -37,7 +37,7 @@ RedTower::RedTower(QGraphicsItem *parent){
     connect(timer,SIGNAL(timeout()),this,SLOT(aquire_target()));
     timer->start(500);
     
-    damage = 10.0;
+    damage = 10;
 }
 
 void RedTower::fire(){
@@ -71,10 +71,27 @@ void RedTower::check_colision()
 
         if(posx_enemy+20 > posx_bullet  && posx_bullet > posx_enemy-20){
 
-            if(posy_enemy+20 > posy_bullet && posy_bullet > posy_enemy-20){
 
-                qDebug() << "Crash" << endl;
-                game->enemigos->at(i)->hide();
+            if(posy_enemy+20 > posy_bullet && posy_bullet > posy_enemy-20){
+                int ataque=(this->damage)-game->enemigos->at(i)->zombie.stats[6];
+                if (ataque<1){ataque=1;}
+                if (bullet->golpea_a_enemigo==0){
+                    game->enemigos->at(i)->zombie.stats[2] -= ataque;
+                    bullet->golpea_a_enemigo=1;
+                }
+
+                if(game->enemigos->at(i)->zombie.stats[2] <= 0){
+
+                    game->enemigos->at(i)->hide();
+                    game->enemigos->at(i)->zombie.stats[2]=game->enemigos->at(i)->zombie.vida_incial;
+                    game->enemigos_eliminados->append(game->enemigos->at(i)->zombie);
+                    game->enemigos->removeAt(i);
+                    if (game->enemigos->length()==0 && game->enemiesSpawned==game->maxNumberOfEnemies){
+                        game->contador_union_zombie_enemigo=0;
+                        game->pasar_generacion();
+                    }
+
+
 
             }
 
@@ -82,5 +99,6 @@ void RedTower::check_colision()
 
 
     }
+}
 }
 

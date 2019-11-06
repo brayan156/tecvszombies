@@ -15,6 +15,9 @@ public:
     Zombie Inversion(Zombie zombie_a_invertir);
     int prob_mutacion=2;
     int prob_inversion=4;
+    int cant_mutaciones=0;
+    int cant_inversiones=0;
+    int num_generacion=1;
 
 };
 

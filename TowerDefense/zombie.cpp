@@ -1,6 +1,6 @@
 #include "zombie.h"
 #include <iostream>
-
+#include <QDebug>
 Zombie::Zombie()
 {
 
@@ -9,6 +9,7 @@ Zombie::Zombie()
 void Zombie::crear_zombie_ramdon()
 {
     int tipo=rand()%4;
+
     if (tipo==0){
         crear_Orco();
     }
@@ -22,6 +23,10 @@ void Zombie::crear_zombie_ramdon()
        crear_Mercenario();
     }
 }
+
+
+
+
 
 void Zombie::crear_Orco()
 {
@@ -38,6 +43,7 @@ void Zombie::crear_Orco()
             stats[i]=rand()%5+1;
         }
     }
+    this->vida_incial=this->stats[this->vida];
 }
 
 void Zombie::crear_Elfo()
@@ -55,6 +61,7 @@ void Zombie::crear_Elfo()
             stats[i]=rand()%10+1;
         }
     }
+    this->vida_incial=this->stats[this->vida];
 }
 
 void Zombie::crear_Harpia()
@@ -65,12 +72,13 @@ void Zombie::crear_Harpia()
         stats[i]=rand()%10+1;
 
     }
+    this->vida_incial=this->stats[this->vida];
 }
 
 void Zombie::crear_Mercenario()
 {
     stats[this->tipo]=4;
-    stats[this->velocidad]=8;
+    stats[this->velocidad]=7;
     for (int i=2; i<7;i++){
         if (i==this->Res_arquero || i==this->Res_mago || i==this->Res_artillero){
             stats[i]=rand()%5+6;
@@ -82,4 +90,5 @@ void Zombie::crear_Mercenario()
             stats[i]=rand()%10+1;
         }
     }
+    this->vida_incial=this->stats[this->vida];
 }
